@@ -25,7 +25,7 @@ const visualizeAudio = (url, id) => {
 
 const filterData = audioBuffer => {
   const rawData = audioBuffer.getChannelData(0);
-  const samples = 30;
+  const samples = 50;
   const blockSize = Math.floor(rawData.length / samples);
   const filteredData = []
   for (let i = 0; i < samples; i++) {
@@ -67,7 +67,7 @@ const draw = (normalizedData, id) => {
     ev.target.ariaSelected = true
   })
   const dpr = window.devicePixelRatio || 1;
-  const padding = 10;
+  const padding = 50;
   canvas.width = canvas.offsetWidth * dpr;
   canvas.height = (canvas.offsetHeight + padding * 2) * dpr;
   const ctx = canvas.getContext("2d");
@@ -89,13 +89,13 @@ const draw = (normalizedData, id) => {
 };
 
 const drawLineSegment = (ctx, x, y, width, isEven) => {
-  ctx.lineWidth = 4; // how thick the line is
-  ctx.strokeStyle = "#333"; // what color our line is
+  ctx.lineWidth = 2; // how thick the line is
+  ctx.strokeStyle = "#666"; // what color our line is
   ctx.beginPath();
   y = isEven ? y : -y;
   ctx.moveTo(x, 0);
   ctx.lineTo(x, y);
-  ctx.arc(x + width / 2, y, width / 2, Math.PI, 0, isEven);
+  ctx.arc(x + width , y, width , Math.PI, 0, isEven);
   ctx.lineTo(x + width, 0);
   ctx.stroke();
 };
