@@ -5,6 +5,7 @@ const playButton = document.querySelector(".tape-controls-play");
 const informationPanel = document.getElementById("informationPanel");
 
 const audio = new Audio();
+
 db.version(3).stores({
   sounds: `
         id,
@@ -12,7 +13,9 @@ db.version(3).stores({
         audio,
         url`,
 });
+
 const audioFiles = document.getElementsByClassName("item");
+const waveforms = [];
 const visualizeAudio = (url, id) => {
   db.sounds
     .get({ id: id })
@@ -58,7 +61,9 @@ const draw = (normalizedData, id) => {
   canvas.addEventListener("click", (ev) => {
     const old = document.querySelector('[aria-selected="true"]');
     if (old && old == ev.target) {
-      audio.pause();
+      if (!audio.paused) {
+        audio.pause();
+      }
       informationPanel.classList.toggle("hidden");
       ev.target.ariaSelected = false;
       return;
@@ -71,14 +76,16 @@ const draw = (normalizedData, id) => {
     }
     informationPanel.firstChild.textContent = ev.target.id;
 
-    audio.pause();
+    if (!audio.paused) {
+      audio.pause();
+    }
     audio.src = ev.target.dataset.url;
     audio.play();
     ev.target.ariaSelected = true;
   });
 
   const dpr = window.devicePixelRatio || 1;
-  const padding = 50;
+  const padding = 20;
   canvas.width = canvas.offsetWidth * dpr;
   canvas.height = (canvas.offsetHeight + padding * 2) * dpr;
   const ctx = canvas.getContext("2d");
@@ -93,20 +100,20 @@ const draw = (normalizedData, id) => {
     if (height < 0) {
       height = 0;
     } else if (height > canvas.offsetHeight / 2) {
-      height = height > canvas.offsetHeight / 2;
+      height = height - canvas.offsetHeight / 2;
     }
     drawLineSegment(ctx, x, height, width, (i + 1) % 2);
   }
 };
 
 const drawLineSegment = (ctx, x, y, width, isEven) => {
-  ctx.lineWidth = 2; // how thick the line is
-  ctx.strokeStyle = "#666"; // what color our line is
+  ctx.lineWidth = 3; // how thick the line is
+  ctx.strokeStyle = "#000"; // what color our line is
   ctx.beginPath();
   y = isEven ? y : -y;
   ctx.moveTo(x, 0);
   ctx.lineTo(x, y);
-  ctx.arc(x + width, y, width, Math.PI, 0, isEven);
+  ctx.arc(x + width / 2, y, width / 2, Math.PI, 0, isEven);
   ctx.lineTo(x + width, 0);
   ctx.stroke();
 };

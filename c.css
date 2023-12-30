@@ -3,7 +3,7 @@
   width: 75%;
   gap: 1rem;
   height: 50%;
-  margin: auto auto;
+  margin: 8rem auto;
   grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
 }
 
@@ -26,9 +26,17 @@ body {
 
 .tagline {
   rotate: -20deg;
-  text-align: left;
-  margin-right: auto;
-  padding: 3rem 5rem;
+  position: absolute;
+  font-size: 2rem;
+  top: 2rem;
+  left: 1rem;
+  right: auto;
+  text-shadow: 2px 2px gray;
+}
+
+.tagline:hover {
+  cursor: pointer;
+  animation: bounce 0.8s ease-in-out infinite alternate;
 }
 
 .hidden {
@@ -43,11 +51,16 @@ body {
   margin: 1rem;
   padding: 2rem;
 }
+
 .item {
   width: 10rem;
   margin: auto;
   height: 5rem;
   padding: 1rem;
+}
+
+canvas:hover {
+  cursor: pointer;
 }
 
 .tag[style*="--index"] {
@@ -63,6 +76,29 @@ body {
   background: lightblue;
 }
 
+@keyframes bounce {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(-10px);
+  }
+}
+
 .item[aria-selected="true"] {
   background: lightgreen;
+  box-shadow: lightblue 10px 20px;
+  animation: bounce 0.3s ease-out infinite alternate;
+}
+
+@media (max-width: 800px) {
+  #informationPanel {
+    position: fixed;
+    bottom: 0;
+    background: white;
+    margin: auto;
+    left: 0;
+    right: 0;
+    z-index: 10000;
+  }
 }
