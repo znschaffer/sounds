@@ -9,7 +9,7 @@
 
 html {
   color: #1a1a1a;
-  background-color: #fdfdfd;
+  background-color: #fefefe;
 }
 
 body {
@@ -20,18 +20,18 @@ body {
   flex-direction: column;
   text-rendering: optimizeLegibility;
   font-kerning: normal;
-  font-family: monospace;
+  font-family: "New York", "Optima", serif;
   display: flex;
 }
 
 .tagline {
-  rotate: -20deg;
+  rotate: -15deg;
   position: absolute;
-  font-size: 2rem;
+  font-size: 2.5rem;
   top: 2rem;
   left: 1rem;
   right: auto;
-  text-shadow: 2px 2px gray;
+  text-shadow: 2px 4px lightgray;
 }
 
 .tagline:hover {
