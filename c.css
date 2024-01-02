@@ -1,7 +1,7 @@
 .container {
   display: grid;
   width: 75%;
-  gap: 1rem;
+  gap: 3rem;
   height: 50%;
   margin: 8rem auto;
   grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
@@ -10,9 +10,12 @@
 html {
   color: #1a1a1a;
   background-color: #fefefe;
+  height: 100%;
 }
 
 body {
+  height: 100%;
+  box-sizing: border-box;
   margin: 0 auto;
   hyphens: auto;
   overflow-wrap: break-word;
@@ -22,14 +25,16 @@ body {
   font-kerning: normal;
   font-family: "New York", "Optima", serif;
   display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .tagline {
-  rotate: -15deg;
+  rotate: -18deg;
   position: absolute;
   font-size: 2.5rem;
-  top: 2rem;
-  left: 1rem;
+  top: 2.8rem;
+  left: 2rem;
   right: auto;
   text-shadow: 2px 4px lightgray;
 }
@@ -46,7 +51,8 @@ body {
 #informationPanel {
   border: black 1px solid;
   position: absolute;
-  right: 0;
+  right: 2rem;
+  top: 2rem;
   left: auto;
   margin: 1rem;
   padding: 2rem;
@@ -92,6 +98,18 @@ canvas:hover {
 }
 
 @media (max-width: 800px) {
+  .container {
+    margin-top: 1rem;
+  }
+  .tagline {
+    rotate: initial;
+    margin: auto;
+    text-align: center;
+    font-size: 2rem;
+    left: auto;
+    top: 3rem;
+    right: auto;
+  }
   #informationPanel {
     position: fixed;
     bottom: 0;
@@ -99,6 +117,7 @@ canvas:hover {
     margin: auto;
     left: 0;
     right: 0;
+    top: auto;
     z-index: 10000;
   }
 }
