@@ -13,6 +13,17 @@ html {
   height: 100%;
 }
 
+#loading {
+  z-index: 10000;
+  position: absolute;
+  top: 2rem;
+  height: 100dvh;
+  width: 100dvw;
+  margin: auto;
+  left: auto;
+  right: auto;
+}
+
 body {
   height: 100%;
   box-sizing: border-box;

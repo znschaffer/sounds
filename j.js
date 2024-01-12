@@ -58,6 +58,17 @@ const normalizeData = (filteredData) => {
 const draw = (normalizedData, id) => {
   // Set up the canvas
   const canvas = document.getElementById(id);
+  if (canvas.nodeName == "P") {
+    const temp = document.createElement("canvas");
+    temp.classList.add("item");
+    temp.id = canvas.id;
+    temp.dataset.url = canvas.dataset.url;
+
+    console.log(temp);
+    canvas.replaceWith(temp);
+    console.log(canvas);
+  }
+
   canvas.addEventListener("click", (ev) => {
     const old = document.querySelector('[aria-selected="true"]');
     if (old && old == ev.target) {
