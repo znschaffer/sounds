@@ -74,7 +74,6 @@ const songs = [
 
 function createCanvas(n) {
   for (i = 0; i < n; i++) {
-
     const c = document.createElement("CANVAS")
     c.id = "Canvas_" + n
     c.songname = songs[i].name
@@ -82,6 +81,13 @@ function createCanvas(n) {
     const h = initHydra({ c: c, makeGlobal: false })
     draw(h)
     c.addEventListener("click", () => {
+      if (lastCanvas == c) {
+        lastSource.stop()
+        infoLine.innerHTML = "Nothing Playing"
+        c.classList.toggle("selected")
+        return;
+      }
+      infoLine.innerHTML = "Loading..."
       if (lastCanvas) {
         lastCanvas.classList.toggle("selected")
       }
@@ -91,12 +97,12 @@ function createCanvas(n) {
         .then(arrayBuffer => audioContext.decodeAudioData(arrayBuffer))
         .then(audioBuffer => {
           play(audioBuffer)
+          infoLine.innerHTML = c.songname
+          lastCanvas = c
         })
 
       // change info line to say song name
 
-      infoLine.innerHTML = c.songname
-      lastCanvas = c
     })
   }
 }
