@@ -1,64 +1,22 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <title>Sounds</title>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link href="c.css" rel="stylesheet" />
-    <script src="https://unpkg.com/dexie/dist/dexie.js"></script>
-    <script defer src="j.js"></script>
-  </head>
-  <body>
-    <h1 class="tagline">Click A Sound!</h1>
-    <div class="hidden" id="informationPanel"><h1></h1></div>
-    <div class="container">
-      <p
-        class="item"
-        id="compassion"
-        data-url="https://audio.znschaffer.com/Zane Schaffer Compassion.wav"
-      >
-        Loading
-      </p>
 
-      <p
-        class="item"
-        id="troubled"
-        data-url="https://audio.znschaffer.com/troubled.wav"
-      >
-        Loading
-      </p>
+<head>
+  <title>Sounds</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link href="c.css" rel="stylesheet" />
+  <script src="https://unpkg.com/hydra-synth"></script>
+</head>
 
-      <p
-        class="item"
-        id="croucher"
-        data-url="https://audio.znschaffer.com/croucher.wav"
-      >
-        Loading
-      </p>
-
-      <p
-        class="item"
-        id="foster"
-        data-url="https://audio.znschaffer.com/foster longer.wav"
-      >
-        Loading
-      </p>
-
-      <p
-        class="item"
-        id="olive and nuts"
-        data-url="https://audio.znschaffer.com/olive and nuts.wav"
-      >
-        Loading
-      </p>
-
-      <p
-        class="item"
-        id="racket and clank"
-        data-url="https://audio.znschaffer.com/racket and clank.wav"
-      >
-        Loading
-      </p>
+<body>
+  <h1 class="tagline">Click A Sound!</h1>
+  <div id="container">
+    <div>
+      <h2 id="infoLine">Nothing Playing</h2>
     </div>
-  </body>
+  </div>
+  <script src="j.js"></script>
+</body>
+
 </html>

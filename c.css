@@ -1,10 +1,11 @@
-.container {
+#container {
   display: grid;
-  width: 75%;
-  gap: 3rem;
+  width: 100%;
+  gap: 0.5rem;
   height: 50%;
   margin: 8rem auto;
-  grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(50px, 200px));
+  justify-content: center;
 }
 
 html {
@@ -76,8 +77,18 @@ body {
   padding: 1rem;
 }
 
+.selected {
+  border-radius: 50%;
+  -webkit-filter: grayscale(50%) brightness(90%);
+}
+
 canvas:hover {
   cursor: pointer;
+  -webkit-filter: grayscale(50%) brightness(90%)
+}
+
+canvas {
+  border: solid 1px black;
 }
 
 .tag[style*="--index"] {
@@ -91,6 +102,10 @@ canvas:hover {
 }
 .item:hover {
   background: lightblue;
+}
+
+#container div {
+  margin: auto
 }
 
 @keyframes bounce {

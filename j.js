@@ -1,134 +1,119 @@
 window.AudioContext = window.AudioContext || window.webkitAudioContext;
 const audioContext = new AudioContext();
-const db = new Dexie("audioDB");
-const playButton = document.querySelector(".tape-controls-play");
-const informationPanel = document.getElementById("informationPanel");
+const infoLine = document.querySelector("#infoLine")
+const rand = Math.random;
+let lastSource = null
+let lastCanvas = null
 
-const audio = new Audio();
-
-db.version(3).stores({
-  sounds: `
-        id,
-        data,
-        audio,
-        url`,
-});
-
-const audioFiles = document.getElementsByClassName("item");
-const waveforms = [];
-const visualizeAudio = (url, id) => {
-  db.sounds
-    .get({ id: id })
-    .then((sound) => sound.data)
-    .then((data) => draw(data, id))
-    .catch((_) =>
-      fetch(url)
-        .then((response) => response.arrayBuffer())
-        .then((arrayBuffer) => audioContext.decodeAudioData(arrayBuffer))
-        .then((audioBuffer) => normalizeData(filterData(audioBuffer)))
-        .then(
-          (data) =>
-            db.sounds.add({ id: id, data: data, url: url }) && draw(data, id),
-        ),
-    );
-};
-
-const filterData = (audioBuffer) => {
-  const rawData = audioBuffer.getChannelData(0);
-  const samples = 50;
-  const blockSize = Math.floor(rawData.length / samples);
-  const filteredData = [];
-  for (let i = 0; i < samples; i++) {
-    let blockStart = blockSize * i;
-    let sum = 0;
-    for (let j = 0; j < blockSize; j++) {
-      sum = sum + Math.abs(rawData[blockStart + j]);
-    }
-    filteredData.push(sum / blockSize);
+function play(audioBuffer) {
+  if (lastSource) {
+    lastSource.stop();
   }
+  const source = audioContext.createBufferSource();
+  source.buffer = audioBuffer;
+  source.connect(audioContext.destination);
+  source.start();
+  lastSource = source;
+}
 
-  return filteredData;
-};
-
-const normalizeData = (filteredData) => {
-  const multiplier = Math.pow(Math.max(...filteredData), -1);
-  return filteredData.map((n) => n * multiplier);
-};
-
-const draw = (normalizedData, id) => {
-  // Set up the canvas
-  const canvas = document.getElementById(id);
-  if (canvas.nodeName == "P") {
-    const temp = document.createElement("canvas");
-    temp.classList.add("item");
-    temp.id = canvas.id;
-    temp.dataset.url = canvas.dataset.url;
-
-    console.log(temp);
-    canvas.replaceWith(temp);
-    console.log(canvas);
-  }
-
-  canvas.addEventListener("click", (ev) => {
-    const old = document.querySelector('[aria-selected="true"]');
-    if (old && old == ev.target) {
-      if (!audio.paused) {
-        audio.pause();
-      }
-      informationPanel.classList.toggle("hidden");
-      ev.target.ariaSelected = false;
-      return;
-    } else if (old) {
-      old.ariaSelected = false;
-    }
-
-    if (informationPanel.classList.contains("hidden")) {
-      informationPanel.classList.toggle("hidden");
-    }
-    informationPanel.firstChild.textContent = ev.target.id;
-
-    if (!audio.paused) {
-      audio.pause();
-    }
-    audio.src = ev.target.dataset.url;
-    audio.play();
-    ev.target.ariaSelected = true;
+const initHydra = ({ makeGlobal, c }) => {
+  console.log(c, makeGlobal);
+  c.width = 200;
+  c.height = 200;
+  const hydra = new Hydra({
+    canvas: c,
+    detectAudio: false,
+    enableStreamCapture: false,
+    makeGlobal,
+    autoLoop: true,
   });
 
-  const dpr = window.devicePixelRatio || 1;
-  const padding = 20;
-  canvas.width = canvas.offsetWidth * dpr;
-  canvas.height = (canvas.offsetHeight + padding * 2) * dpr;
-  const ctx = canvas.getContext("2d");
-  ctx.scale(dpr, dpr);
-  ctx.translate(0, canvas.offsetHeight / 2 + padding); // Set Y = 0 to be in the middle of the canvas
-
-  // draw the line segments
-  const width = canvas.offsetWidth / normalizedData.length;
-  for (let i = 0; i < normalizedData.length; i++) {
-    const x = width * i;
-    let height = normalizedData[i] * canvas.offsetHeight - padding;
-    if (height < 0) {
-      height = 0;
-    } else if (height > canvas.offsetHeight / 2) {
-      height = height - canvas.offsetHeight / 2;
-    }
-    drawLineSegment(ctx, x, height, width, (i + 1) % 2);
-  }
-};
-
-const drawLineSegment = (ctx, x, y, width, isEven) => {
-  ctx.lineWidth = 3; // how thick the line is
-  ctx.strokeStyle = "#000"; // what color our line is
-  ctx.beginPath();
-  y = isEven ? y : -y;
-  ctx.moveTo(x, 0);
-  ctx.lineTo(x, y);
-  ctx.arc(x + width / 2, y, width / 2, Math.PI, 0, isEven);
-  ctx.lineTo(x + width, 0);
-  ctx.stroke();
-};
-
-for (const audioFile of audioFiles) {
-  visualizeAudio(audioFile.dataset.url, audioFile.id);
+  document.querySelector("#container").appendChild(c);
+  return hydra;
 }
+
+const songs = [
+  {
+    name: "09302018",
+    url: "assets/09302018.mp3"
+  },
+  {
+    name: "10152018",
+    url: "assets/10152018.mp3"
+  },
+  {
+    name: "Blind",
+    url: "assets/Blind.mp3"
+  },
+  {
+    name: "Compassion",
+    url: "assets/Compassion.mp3"
+  },
+  {
+    name: "Cashews Poppin",
+    url: "assets/Cashews Poppin.mp3"
+  },
+  {
+    name: "Crouched One Time",
+    url: "assets/Crouched One Time.mp3"
+  },
+  {
+    name: "Deasil",
+    url: "assets/Deasil.mp3"
+  },
+  {
+    name: "Free Fall",
+    url: "assets/Free Fall.mp3"
+  },
+  {
+    name: "Get Me One",
+    url: "assets/Get Me One.mp3"
+  },
+]
+
+
+function createCanvas(n) {
+  for (i = 0; i < n; i++) {
+
+    const c = document.createElement("CANVAS")
+    c.id = "Canvas_" + n
+    c.songname = songs[i].name
+    c.url = songs[i].url
+    const h = initHydra({ c: c, makeGlobal: false })
+    draw(h)
+    c.addEventListener("click", () => {
+      if (lastCanvas) {
+        lastCanvas.classList.toggle("selected")
+      }
+      c.classList.toggle("selected")
+      // switch current audioContext node to be c.url
+      window.fetch(c.url).then(response => response.arrayBuffer())
+        .then(arrayBuffer => audioContext.decodeAudioData(arrayBuffer))
+        .then(audioBuffer => {
+          play(audioBuffer)
+        })
+
+      // change info line to say song name
+
+      infoLine.innerHTML = c.songname
+      lastCanvas = c
+    })
+  }
+}
+
+function draw(canvas) {
+  c = canvas.synth;
+  let c1 = rand() * 10 + 2;
+  let c2 = rand() * 10 + 2;
+  let c3 = rand() * 10 + 2;
+  c.shape(4, [rand(), rand()].smooth(), rand())
+    .mult(c.osc(rand() + 5, rand() * 0.5).modulate(c.osc(rand() + 2, rand() * 0.5).rotate(rand(), rand() * 0.5), 3))
+    .color(c1, c2, c3)
+    .saturate(rand())
+    .luma(2, 0.1)
+    .scale(1, 1)
+    .diff(c.o0, 0.8)// o0
+    .out(c.o0)// o1
+}
+
+createCanvas(songs.length)
