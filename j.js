@@ -82,25 +82,27 @@ function createCanvas(n) {
     draw(h)
     c.addEventListener("click", () => {
       if (lastCanvas == c) {
+        lastCanvas.classList.remove("selected")
         lastSource.stop()
         infoLine.innerHTML = "Nothing Playing"
-        c.classList.toggle("selected")
+        lastCanvas = null
         return;
       }
       infoLine.innerHTML = "Loading..."
+
       if (lastCanvas) {
-        lastCanvas.classList.toggle("selected")
+        lastCanvas.classList.remove("selected")
       }
-      c.classList.toggle("selected")
+      c.classList.add("selected")
       // switch current audioContext node to be c.url
       window.fetch(c.url).then(response => response.arrayBuffer())
         .then(arrayBuffer => audioContext.decodeAudioData(arrayBuffer))
         .then(audioBuffer => {
           play(audioBuffer)
           infoLine.innerHTML = c.songname
-          lastCanvas = c
         })
 
+      lastCanvas = c
       // change info line to say song name
 
     })
