@@ -81,6 +81,7 @@ function createCanvas(n) {
     const h = initHydra({ c: c, makeGlobal: false })
     draw(h)
     c.addEventListener("click", () => {
+      // reclick the currently selected canvas
       if (lastCanvas == c) {
         lastCanvas.classList.remove("selected")
         lastSource.stop()
@@ -88,22 +89,27 @@ function createCanvas(n) {
         lastCanvas = null
         return;
       }
+
       infoLine.innerHTML = "Loading..."
 
+      // remove last played selected class
       if (lastCanvas) {
         lastCanvas.classList.remove("selected")
       }
+
       c.classList.add("selected")
+
+      lastCanvas = c
+
       // switch current audioContext node to be c.url
       window.fetch(c.url).then(response => response.arrayBuffer())
         .then(arrayBuffer => audioContext.decodeAudioData(arrayBuffer))
         .then(audioBuffer => {
           play(audioBuffer)
+          // change info line to say song name
           infoLine.innerHTML = c.songname
         })
 
-      lastCanvas = c
-      // change info line to say song name
 
     })
   }
